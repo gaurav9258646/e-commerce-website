@@ -1,18 +1,19 @@
-import { TableOfContentsIcon, Search, UserRound } from "lucide-react";
+import { TableOfContentsIcon, Search, UserRound, Bookmark, ShoppingCart } from "lucide-react";
 import useAppStore from "@/store/app.store";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { ShoppingCart, Sidebar as SidebarIcon } from "lucide-react";
-import imag  from  "../../assets/3.png"
+import imag from "../../assets/3.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import useUserStore from "@/store/user.store";
 import { Button } from "../ui/button";
+import Wishlist from "@/pages/Wishlist";
+import Cart from "@/pages/Cart";
 
 const Navbar = () => {
   const { openSidebar } = useAppStore();
-  const { setUser, cart } = useUserStore();
-  const { user } = useAuth();
+  const { setUser, cart, wishlist } = useUserStore();
+  const { user, loading } = useAuth();
 
   const logOut = () => {
     localStorage.removeItem("token");
@@ -27,8 +28,7 @@ const Navbar = () => {
         <TableOfContentsIcon onClick={openSidebar} className="cursor-pointer" />
         <Sidebar />
         <Link to="/" className="text-xl font-bold">
-        <img src={imag} alt="Logo" className="h-14" />
-
+          <img src={imag} alt="Logo" className="h-14" />
         </Link>
       </div>
 
@@ -44,16 +44,58 @@ const Navbar = () => {
 
       {/* Navigation Links */}
       <div className="flex items-center gap-6 text-sm font-medium">
-        <Link to="/" className="hover:text-blue-600">Home</Link>
-        <Link to="/product" className="hover:text-blue-600">Product</Link>
-        <Link to="/orders" className="hover:text-blue-600">Orders</Link>
+        <Link to="/" className="hover:text-blue-600">
+          Home
+        </Link>
+        <Link to="/product" className="hover:text-blue-600">
+          Product
+        </Link>
+        <Link to="/orders" className="hover:text-blue-600">
+          Orders
+        </Link>
       </div>
 
-      {/* Auth Buttons / Avatar */}
-      <div className="flex items-center gap-3">
-        {!user && (
+      {/* Right Section */}
+      <div className="flex items-center gap-4">
+        {user ? (
           <>
-            <Link to="/signin" className="hover:text-blue-600">Sign In</Link>
+            {/* Cart */}
+            <Link to="/cart" className="relative">
+              {Cart?.length > 0 && (
+                <p className="text-xs bg-red-500 text-white w-4 h-4 rounded-full absolute top-[-5px] right-[-5px] flex items-center justify-center">
+                  {Cart.length}
+                </p>
+              )}
+              <ShoppingCart className="cursor-pointer" />
+            </Link>
+
+            {/* Wishlist */}
+            <Link to="/wishlist" className="relative">
+              {Wishlist?.length > 0 && (
+                <p className="text-xs bg-red-500 text-white w-4 h-4 rounded-full absolute top-[-5px] right-[-5px] flex items-center justify-center">
+                  {Wishlist.length}
+                </p>
+              )}
+              <Bookmark className="cursor-pointer" />
+            </Link>
+
+            {/* Log Out */}
+            <Button size={"sm"} onClick={logOut}>
+              Log Out
+            </Button>
+
+            {/* Avatar */}
+            <Avatar className="cursor-pointer">
+              <AvatarFallback className="uppercase">
+                {user?.name ? user.name[0] : "U"}
+              </AvatarFallback>
+            </Avatar>
+          </>
+        ) : (
+          <>
+            <Link to="/signin" className="hover:text-blue-600">
+              Sign In
+            </Link>
             <Link to="/login" className="flex items-center gap-2 hover:text-blue-600">
               Login
               <span className="border rounded-full p-1 hover:bg-gray-200 transition">
@@ -61,25 +103,6 @@ const Navbar = () => {
               </span>
             </Link>
           </>
-        )}
-        {user && (
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            {cart!?.length > 0 && (
-              <p className="text-xs bg-red-500 text-white w-4 h-4 rounded-full absolute top-[-5px] right-[-5px] flex items-center justify-center">
-                {cart?.length}
-              </p>
-            )}
-            <ShoppingCart />
-          </div>
-          <Button size={"sm"} onClick={logOut}>
-            Log Out
-          </Button>
-          <Avatar className="cursor-pointer">
-            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-            <AvatarFallback className="uppercase">{user.name[0]}</AvatarFallback>
-          </Avatar>
-        </div>
         )}
       </div>
     </div>

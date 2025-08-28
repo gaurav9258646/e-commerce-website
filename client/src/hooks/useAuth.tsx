@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const useAuth = () => {
-  const { user, setUser, setCart, setWishlist } = useUserStore();
+    const { user, setUser, setCart, setWishlist, setLoading: setUserLoading } = useUserStore();
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const [loading, setLoading] = useState(!!token);
 
@@ -33,6 +33,7 @@ export const useAuth = () => {
           localStorage.removeItem("refToken");
         } finally {
           setLoading(false);
+          // setUserLoading(false);
         }
       };
 

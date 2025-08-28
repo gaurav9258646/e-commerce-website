@@ -7,6 +7,8 @@ import { Toaster } from "./components/ui/sonner";
 import Orders from "./pages/Orders";
 import Products from "./pages/Product";
 import Login from "./pages/Login";
+import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 import ProductDetails from "./pages/ProductDetails";
 
 const App = () => {
@@ -17,6 +19,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/product/:slug" element={<ProductDetails/>} /> // single product info
         <Route path="/products/:category" element={<Products />} />
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/login" element={<Login />} />
 
